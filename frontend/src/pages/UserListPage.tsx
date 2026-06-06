@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { userService, User } from '../services/userService';
-import { UserPlus, Shield, Mail, Calendar } from 'lucide-react';
+import { userService, type User } from '../services/userService';
+import { UserPlus, Mail, Calendar } from 'lucide-react';
 import './UserListPage.css';
 
 const UserListPage: React.FC = () => {

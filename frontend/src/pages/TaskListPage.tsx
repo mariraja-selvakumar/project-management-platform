@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { taskService, Task } from '../services/taskService';
-import { CheckCircle2, Circle, Clock, AlertTriangle, XCircle } from 'lucide-react';
+import { type Task } from '../services/taskService';
+import { CheckCircle2, Circle, Clock, XCircle } from 'lucide-react';
 import './TaskListPage.css';
 
 const TaskListPage: React.FC = () => {

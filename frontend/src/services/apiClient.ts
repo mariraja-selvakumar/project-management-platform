@@ -23,7 +23,7 @@ apiClient.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const { refreshToken, setAccessToken, logout } = useAuthStore.getState();
+      const { refreshToken, logout } = useAuthStore.getState();
 
       if (refreshToken) {
         try {

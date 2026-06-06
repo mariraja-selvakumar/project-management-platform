@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { projectService, Project } from '../services/projectService';
+import { projectService, type Project } from '../services/projectService';
 import { Plus, Search, Filter, MoreVertical } from 'lucide-react';
 import './ProjectListPage.css';
 
