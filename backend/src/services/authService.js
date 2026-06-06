@@ -1,10 +1,28 @@
 const bcrypt = require('bcryptjs');
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../utils/jwt');
 const userRepository = require('../repositories/userRepository');
+const usersRepository = require('../repositories/usersRepository');
 const { invalidCredentials, unauthorized, notFound, badRequest } = require('../utils/errors');
 const auditLogService = require('./auditLogService');
 
 class AuthService {
+  async register(email, password, firstName, lastName) {
+    const existingUser = await userRepository.findByEmail(email);
+    if (existingUser) {
+      throw badRequest('Email already exists');
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    const user = await usersRepository.create({
+      email,
+      passwordHash,
+      firstName,
+      lastName,
+    });
+
+    return this._sanitize(user);
+  }
+
   async login(email, password, ipAddress) {
     const user = await userRepository.findByEmail(email);
     if (!user || !user.is_active) {

@@ -8,6 +8,15 @@ const { generalLimiter, authLimiter } = require('../middleware/rateLimiter');
 const router = express.Router();
 
 // 1. Zod schemas
+const registerSchema = z.object({
+  body: z.object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters long'),
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+  }).strict(),
+});
+
 const loginSchema = z.object({
   body: z.object({
     email: z.string().email('Invalid email address'),
@@ -29,6 +38,7 @@ const changePasswordSchema = z.object({
 });
 
 // 2. Routes definitions
+router.post('/register', generalLimiter, validate(registerSchema), authController.register);
 router.post('/login', generalLimiter, authLimiter, validate(loginSchema), authController.login);
 router.post('/logout', generalLimiter, auth, authController.logout);
 router.post('/refresh', generalLimiter, validate(refreshSchema), authController.refresh);
