@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectService, type Project } from '../services/projectService';
 import { Plus, Search, Filter, MoreVertical } from 'lucide-react';
+import { ProjectForm } from '../components/ProjectForm';
 import './ProjectListPage.css';
 
 const ProjectListPage: React.FC = () => {
   const [filters, setFilters] = useState({ status: '', page: 1, limit: 10 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['projects', filters],
     queryFn: () => projectService.getProjects(filters),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: projectService.createProject,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      setIsModalOpen(false);
+    },
   });
 
   if (isLoading) return <div className="loading">Loading projects...</div>;
@@ -21,11 +32,24 @@ const ProjectListPage: React.FC = () => {
     <div className="projects-page">
       <div className="page-header">
         <h1 className="page-title">Projects</h1>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
           <Plus size={18} />
           <span>New Project</span>
         </button>
       </div>
+
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <ProjectForm
+              onSubmit={(data) => createMutation.mutate(data)}
+              onCancel={() => setIsModalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ... rest of the content */}
 
       <div className="filters-bar">
         <div className="search-box">
