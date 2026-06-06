@@ -6,7 +6,7 @@ export interface Project {
   description: string;
   status: 'active' | 'on_hold' | 'completed' | 'archived';
   startDate: string | null;
-  dueDate: string | null;
+  due_date: string | null;
   ownerId: number;
   taskSummary?: {
     todo: number;
@@ -17,8 +17,14 @@ export interface Project {
   };
 }
 
+export interface ProjectFilters {
+  status?: string;
+  page?: number;
+  limit?: number;
+}
+
 export const projectService = {
-  getProjects: async (filters: any) => {
+  getProjects: async (filters: ProjectFilters) => {
     const { data } = await apiClient.get('/projects', { params: filters });
     return data;
   },
