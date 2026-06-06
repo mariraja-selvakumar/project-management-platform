@@ -69,6 +69,9 @@ const LoginPage: React.FC = () => {
             {loading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
+        <p style={{ marginTop: '20px', fontSize: '14px' }}>
+          Don't have an account? <a href="/register">Sign up</a>
+        </p>
       </div>
     </div>
   );
