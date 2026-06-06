@@ -6,7 +6,7 @@ import { ProjectForm } from '../components/ProjectForm';
 import './ProjectListPage.css';
 
 const ProjectListPage: React.FC = () => {
-  const [filters, setFilters] = useState({ status: '', page: 1, limit: 10 });
+  const [filters, setFilters] = useState({ status: 'active', page: 1, limit: 10 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -26,7 +26,7 @@ const ProjectListPage: React.FC = () => {
   if (isLoading) return <div className="loading">Loading projects...</div>;
   if (error) return <div className="error">Error loading projects</div>;
 
-  const projects: Project[] = data.data;
+  const projects: Project[] = data.data || [];
 
   return (
     <div className="projects-page">
@@ -49,7 +49,27 @@ const ProjectListPage: React.FC = () => {
         </div>
       )}
 
-      {/* ... rest of the content */}
+      {projects.length === 0 ? (
+        <div className="empty-state">
+          <p>No projects found.</p>
+          <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
+            Create your first project
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="filters-bar">
+            {/* ... filters ... */}
+          </div>
+          <div className="project-grid">
+            {projects.map((project) => (
+              <div key={project.id} className="project-card">
+                {/* ... project card content ... */}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       <div className="filters-bar">
         <div className="search-box">
