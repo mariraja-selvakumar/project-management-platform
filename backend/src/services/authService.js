@@ -49,10 +49,14 @@ class AuthService {
       ipAddress,
     });
 
+    const permissions = await userRepository.getPermissions(user.id);
     return {
       accessToken,
       refreshToken,
-      user: this._sanitize(user),
+      user: {
+        ...this._sanitize(user),
+        permissions,
+      },
     };
   }
 
