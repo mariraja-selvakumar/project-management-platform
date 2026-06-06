@@ -18,31 +18,34 @@ interface ProjectFormProps {
 }
 
 export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel }) => {
+  const today = new Date().toISOString().split('T')[0];
   const { register, handleSubmit, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      status: 'active'
+      status: 'active',
+      dueDate: today
     }
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="project-form">
-      <div className="form-group">
-        <label>Name</label>
-        <input {...register('name')} />
-        {errors.name && <span className="error">{errors.name.message}</span>}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <h2 className="text-xl font-bold mb-4">Create Project</h2>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Name</label>
+        <input {...register('name')} className="w-full p-2 border border-gray-300 rounded-lg" />
+        {errors.name && <span className="text-red-500 text-xs">{errors.name.message}</span>}
       </div>
-      <div className="form-group">
-        <label>Description</label>
-        <textarea {...register('description')} />
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Description</label>
+        <textarea {...register('description')} className="w-full p-2 border border-gray-300 rounded-lg" />
       </div>
-      <div className="form-group">
-        <label>Due Date</label>
-        <input type="date" {...register('dueDate')} />
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Due Date</label>
+        <input type="date" {...register('dueDate')} defaultValue={today} className="w-full p-2 border border-gray-300 rounded-lg" />
       </div>
-      <div className="form-actions">
-        <button type="button" onClick={onCancel}>Cancel</button>
-        <button type="submit">Create Project</button>
+      <div className="flex justify-end gap-2 pt-4">
+        <button type="button" onClick={onCancel} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Cancel</button>
+        <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Create Project</button>
       </div>
     </form>
   );
