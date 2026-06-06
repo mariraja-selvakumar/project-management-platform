@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: platform
+    volumes:
+      - db_data:/var/lib/mysql
+    ports: ['3306:3306']
+  backend:
+    build: ./backend
+    env_file: .env
+    ports: ['3000:3000']
+    depends_on: [db]
+  frontend:
+    build: ./frontend
+    ports: ['5173:5173']
+    environment:
+      VITE_API_BASE_URL: http://backend:3000/api/v1
+volumes:
+  db_data:
