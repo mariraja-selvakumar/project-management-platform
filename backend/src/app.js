@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const authRoutes = require('./routes/authRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const { projectTaskRouter, taskRouter } = require('./routes/taskRoutes');
+const usersRoutes = require('./routes/usersRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -25,6 +27,9 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/projects', projectRoutes);
+app.use('/api/v1/projects', projectTaskRouter);
+app.use('/api/v1/tasks', taskRouter);
+app.use('/api/v1/users', usersRoutes);
 
 // Catch 404 errors
 app.use((req, res, next) => {
