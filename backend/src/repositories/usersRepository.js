@@ -23,19 +23,27 @@ class UsersRepository {
     return db('users').where({ email }).first();
   }
 
-  async create(data) {
-    const [id] = await db('users').insert({
-      email: data.email,
-      password_hash: data.passwordHash,
-      first_name: data.firstName,
-      last_name: data.lastName,
-      is_active: 1,
-      created_at: db.fn.now(),
-      updated_at: db.fn.now(),
+  async create(data, roleIds = []) {
+    return db.transaction(async (trx) => {
+      const [id] = await trx('users').insert({
+        email: data.email,
+        password_hash: data.passwordHash,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        is_active: 1,
+        created_at: db.fn.now(),
+        updated_at: db.fn.now(),
+      });
+      
+      if (roleIds.length > 0) {
+        const rows = roleIds.map(roleId => ({ user_id: id, role_id: roleId }));
+        await trx('user_roles').insert(rows);
+      }
+
+      return trx('users').where({ id })
+        .select('id', 'email', 'first_name', 'last_name', 'is_active', 'created_at', 'updated_at')
+        .first();
     });
-    return db('users').where({ id })
-      .select('id', 'email', 'first_name', 'last_name', 'is_active', 'created_at', 'updated_at')
-      .first();
   }
 
   async update(id, data) {

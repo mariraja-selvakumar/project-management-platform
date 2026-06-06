@@ -37,12 +37,14 @@ class UsersService {
     const rounds = parseInt(process.env.BCRYPT_ROUNDS, 10) || 12;
     const passwordHash = await bcrypt.hash(data.temporaryPassword || 'ChangeMe123!', rounds);
 
+    const roleIds = data.roleTypeId ? [data.roleTypeId] : [];
+
     const user = await usersRepository.create({
       email: data.email,
       passwordHash,
       firstName: data.firstName,
       lastName: data.lastName,
-    });
+    }, roleIds);
 
     await auditLogService.log({
       userId: userContext.userId,
@@ -50,7 +52,7 @@ class UsersService {
       resourceType: 'user',
       resourceId: user.id,
       ipAddress: userContext.ipAddress,
-      newValues: { email: user.email },
+      newValues: { email: user.email, roleTypeId: data.roleTypeId },
     });
 
     return user;
