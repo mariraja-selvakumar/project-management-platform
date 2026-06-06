@@ -36,8 +36,8 @@ const LoginPage: React.FC = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1>Welcome Back</h1>
-        <p className="login-subtitle">Log in to manage your projects</p>
+        <h1 className="login-title">Welcome Back</h1>
+        <p className="login-subtitle">Sign in to your account</p>
         
         {error && <div className="error-message">{error}</div>}
         
@@ -51,6 +51,7 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@company.com"
               required
+              className="form-input"
             />
           </div>
           
@@ -63,15 +64,17 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
+              className="form-input"
             />
           </div>
           
           <button type="submit" className="login-submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Log In'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
-        <p style={{ marginTop: '20px', fontSize: '14px' }}>
-          Don't have an account? <a href="/register">Sign up</a>
+        
+        <p className="login-footer">
+          Don't have an account? <a href="/register" className="link">Sign up</a>
         </p>
       </div>
     </div>
