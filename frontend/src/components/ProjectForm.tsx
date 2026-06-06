@@ -48,6 +48,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel, on
         <textarea {...register('description')} className="w-full p-2 border border-gray-300 rounded-lg" />
       </div>
       <div>
+        <label className="block text-sm font-medium text-gray-700">Status</label>
+        <select {...register('status')} className="w-full p-2 border border-gray-300 rounded-lg">
+          <option value="active">Active</option>
+          <option value="on_hold">On Hold</option>
+          <option value="completed">Completed</option>
+          <option value="archived">Archived</option>
+        </select>
+        {errors.status && <span className="text-red-500 text-xs">{errors.status.message}</span>}
+      </div>
+      <div>
         <label className="block text-sm font-medium text-gray-700">Due Date</label>
         <input type="date" {...register('dueDate')} defaultValue={initialData?.due_date ? initialData.due_date.split('T')[0] : today} className="w-full p-2 border border-gray-300 rounded-lg" />
       </div>
