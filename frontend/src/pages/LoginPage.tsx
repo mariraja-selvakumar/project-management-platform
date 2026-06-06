@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import apiClient from '../services/apiClient';
-import './LoginPage.css';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -34,16 +33,16 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h1 className="login-title">Welcome Back</h1>
-        <p className="login-subtitle">Sign in to your account</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg text-center">
+        <h1 className="text-2xl font-bold mb-2 text-gray-900">Welcome Back</h1>
+        <p className="text-gray-600 mb-8">Sign in to your account</p>
         
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="bg-red-100 text-red-600 p-3 rounded-md mb-6 text-sm">{error}</div>}
         
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+        <form onSubmit={handleSubmit} className="text-left space-y-5">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
             <input
               id="email"
               type="email"
@@ -51,12 +50,12 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@company.com"
               required
-              className="form-input"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input
               id="password"
               type="password"
@@ -64,17 +63,21 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="form-input"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           
-          <button type="submit" className="login-submit" disabled={loading}>
+          <button 
+            type="submit" 
+            className="w-full p-3 bg-purple-600 text-white rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity" 
+            disabled={loading}
+          >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
         
-        <p className="login-footer">
-          Don't have an account? <a href="/register" className="link">Sign up</a>
+        <p className="mt-5 text-sm">
+          Don't have an account? <a href="/register" className="text-purple-600 font-semibold hover:underline">Sign up</a>
         </p>
       </div>
     </div>
