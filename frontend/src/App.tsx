@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProjectListPage from './pages/ProjectListPage';
 import TaskListPage from './pages/TaskListPage';
+import UserListPage from './pages/UserListPage';
 import './App.css';
 
 const queryClient = new QueryClient({
@@ -31,7 +32,9 @@ function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/projects" element={<ProjectListPage />} />
               <Route path="/tasks" element={<TaskListPage />} />
-              <Route path="/users" element={<div>Users Page (Coming Soon)</div>} />
+              <Route element={<ProtectedRoute requiredPermission="users:read" />}>
+                <Route path="/users" element={<UserListPage />} />
+              </Route>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Route>
