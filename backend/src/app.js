@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const authRoutes = require('./routes/authRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 const { projectTaskRouter, taskRouter } = require('./routes/taskRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const errorHandler = require('./middleware/errorHandler');
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/projects', projectRoutes);
+app.use('/api/v1/dashboard', dashboardRoutes);
 app.use('/api/v1/projects/:id/tasks', projectTaskRouter);
 app.use('/api/v1/tasks', taskRouter);
 app.use('/api/v1/users', usersRoutes);
