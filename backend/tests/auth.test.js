@@ -47,6 +47,7 @@ describe('Auth Endpoints', () => {
       userRepository.findByEmail.mockResolvedValue(mockUser);
       userRepository.saveRefreshToken.mockResolvedValue(true);
       userRepository.updateLastLogin.mockResolvedValue(true);
+      userRepository.getPermissions.mockResolvedValue(['projects:read']);
 
       const res = await request(app)
         .post('/api/v1/auth/login')
@@ -60,6 +61,7 @@ describe('Auth Endpoints', () => {
       expect(res.body.data).toHaveProperty('accessToken');
       expect(res.body.data).toHaveProperty('refreshToken');
       expect(res.body.data.user.email).toBe('test@example.com');
+      expect(res.body.data.user.permissions).toContain('projects:read');
       expect(res.body.data.user).not.toHaveProperty('password_hash');
     });
 

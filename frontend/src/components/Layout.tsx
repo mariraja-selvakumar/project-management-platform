@@ -21,7 +21,7 @@ const Layout: React.FC = () => {
   ];
 
   const filteredNavItems = navItems.filter(
-    (item) => !item.permission || (user && user.permissions.includes(item.permission))
+    (item) => !item.permission || (user?.permissions?.includes(item.permission))
   );
 
   return (
