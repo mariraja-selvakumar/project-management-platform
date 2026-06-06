@@ -6,6 +6,7 @@ module.exports = (err, req, res, next) => {
     message: err.message,
     stack: err.stack,
     details: err.details,
+    code: err.code, // Log the error code
     url: req.originalUrl,
     method: req.method,
     ip: req.ip,
@@ -20,7 +21,8 @@ module.exports = (err, req, res, next) => {
     BAD_REQUEST: 400
   };
 
-  const errorCode = err.message || 'INTERNAL_SERVER_ERROR';
+  // Prioritize err.code if available, otherwise use err.message
+  const errorCode = err.code || err.message;
   const status = statusMap[errorCode] || 500;
   const errorName = status < 500 ? errorCode : 'INTERNAL_SERVER_ERROR';
   const displayMessage = status < 500 ? err.message : 'Internal server error';

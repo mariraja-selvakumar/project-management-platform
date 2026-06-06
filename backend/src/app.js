@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/projects', projectRoutes);
-app.use('/api/v1/projects', projectTaskRouter);
+app.use('/api/v1/projects/:id/tasks', projectTaskRouter);
 app.use('/api/v1/tasks', taskRouter);
 app.use('/api/v1/users', usersRoutes);
 
