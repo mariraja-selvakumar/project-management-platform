@@ -6,8 +6,8 @@ import * as z from 'zod';
 const projectSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  status: z.enum(['active', 'on_hold', 'completed', 'archived']).default('active'),
-  dueDate: z.string().optional(),
+  status: z.enum(['active', 'on_hold', 'completed', 'archived']),
+  dueDate: z.string().optional().nullable(),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
@@ -20,6 +20,9 @@ interface ProjectFormProps {
 export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
+    defaultValues: {
+      status: 'active'
+    }
   });
 
   return (
