@@ -22,8 +22,9 @@ const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const { data } = await apiClient.post('/auth/login', { email, password });
-      setAuth(data.user, data.accessToken, data.refreshToken);
+      const { data: response } = await apiClient.post('/auth/login', { email, password });
+      const { user, accessToken, refreshToken } = response.data;
+      setAuth(user, accessToken, refreshToken);
       navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
