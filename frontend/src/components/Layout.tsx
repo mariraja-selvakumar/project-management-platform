@@ -68,7 +68,7 @@ const Layout: React.FC = () => {
         <header className="h-16 bg-white border-b border-gray-200 flex items-center px-8">
            {/* Breadcrumbs or Page Title could go here */}
         </header>
-        <div className="p-8">
+        <div className="p-4">
           <Outlet />
         </div>
       </main>

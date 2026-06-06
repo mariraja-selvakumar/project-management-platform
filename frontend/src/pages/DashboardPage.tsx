@@ -2,7 +2,6 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../services/apiClient';
 import { Briefcase, CheckCircle, Clock, AlertCircle } from 'lucide-react';
-import './DashboardPage.css';
 
 interface DashboardData {
   kpis: {
@@ -31,72 +30,58 @@ const DashboardPage: React.FC = () => {
     },
   });
 
-  if (isLoading) return <div className="loading">Loading dashboard...</div>;
-  if (error) return <div className="error">Error loading dashboard data</div>;
+  if (isLoading) return <div className="p-8 text-center text-gray-600">Loading dashboard...</div>;
+  if (error) return <div className="p-8 text-center text-red-600">Error loading dashboard data</div>;
 
   return (
-    <div className="dashboard">
-      <h1 className="page-title">Dashboard Overview</h1>
+    <div className="p-4">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900">Dashboard</h1>
       
-      <div className="kpi-grid">
-        <div className="kpi-card">
-          <div className="kpi-icon projects"><Briefcase size={24} /></div>
-          <div className="kpi-content">
-            <span className="kpi-label">Total Projects</span>
-            <span className="kpi-value">{data?.kpis.projects.total}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { label: 'Total Projects', value: data?.kpis.projects.total, icon: Briefcase, color: 'text-blue-600' },
+          { label: 'Active Projects', value: data?.kpis.projects.active, icon: Clock, color: 'text-green-600' },
+          { label: 'Completed Tasks', value: data?.kpis.tasks.completed, icon: CheckCircle, color: 'text-purple-600' },
+          { label: 'Total Tasks', value: data?.kpis.tasks.total, icon: AlertCircle, color: 'text-orange-600' },
+        ].map((kpi, idx) => (
+          <div key={idx} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+            <div className={`p-3 rounded-lg bg-gray-50 ${kpi.color}`}><kpi.icon size={24} /></div>
+            <div>
+              <p className="text-sm text-gray-500">{kpi.label}</p>
+              <p className="text-2xl font-bold text-gray-900">{kpi.value}</p>
+            </div>
           </div>
-        </div>
-        <div className="kpi-card">
-          <div className="kpi-icon active"><Clock size={24} /></div>
-          <div className="kpi-content">
-            <span className="kpi-label">Active Projects</span>
-            <span className="kpi-value">{data?.kpis.projects.active}</span>
-          </div>
-        </div>
-        <div className="kpi-card">
-          <div className="kpi-icon tasks"><CheckCircle size={24} /></div>
-          <div className="kpi-content">
-            <span className="kpi-label">Completed Tasks</span>
-            <span className="kpi-value">{data?.kpis.tasks.completed}</span>
-          </div>
-        </div>
-        <div className="kpi-card">
-          <div className="kpi-icon pending"><AlertCircle size={24} /></div>
-          <div className="kpi-content">
-            <span className="kpi-label">Total Tasks</span>
-            <span className="kpi-value">{data?.kpis.tasks.total}</span>
-          </div>
-        </div>
+        ))}
       </div>
 
-      <div className="dashboard-grid">
-        <div className="dashboard-section recent-activity">
-          <h2>Recent Activity</h2>
-          <div className="activity-list">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">Recent Activity</h2>
+          <div className="space-y-4">
             {data?.recentActivity.map((activity) => (
-              <div key={activity.id} className="activity-item">
-                <div className="activity-dot"></div>
-                <div className="activity-details">
-                  <p><strong>{activity.action}</strong> on {activity.resource_type}</p>
-                  <span>{new Date(activity.created_at).toLocaleString()}</span>
+              <div key={activity.id} className="flex gap-4 items-start pb-4 border-b border-gray-50 last:border-0 last:pb-0">
+                <div className="w-2 h-2 mt-2 rounded-full bg-purple-500"></div>
+                <div>
+                  <p className="text-sm text-gray-800"><strong>{activity.action}</strong> on {activity.resource_type}</p>
+                  <p className="text-xs text-gray-500">{new Date(activity.created_at).toLocaleString()}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
         
-        <div className="dashboard-section task-summary">
-          <h2>Task Status Distribution</h2>
-          <div className="status-bars">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">Task Status Distribution</h2>
+          <div className="space-y-4">
             {Object.entries(data?.charts.tasksByStatus || {}).map(([status, count]) => (
-              <div key={status} className="status-bar-item">
-                <div className="status-label">
-                  <span>{status.replace('_', ' ')}</span>
-                  <span>{count}</span>
+              <div key={status} className="space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 capitalize">{status.replace('_', ' ')}</span>
+                  <span className="font-medium text-gray-900">{count}</span>
                 </div>
-                <div className="progress-bg">
+                <div className="w-full bg-gray-100 rounded-full h-2">
                   <div 
-                    className={`progress-fill ${status}`} 
+                    className="bg-purple-500 h-2 rounded-full"
                     style={{ width: `${(count / (data?.kpis.tasks.total || 1)) * 100}%` }}
                   ></div>
                 </div>
