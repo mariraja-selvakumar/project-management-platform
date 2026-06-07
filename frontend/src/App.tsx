@@ -8,6 +8,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ProjectListPage from "./pages/ProjectListPage";
 import TaskListPage from "./pages/TaskListPage";
 import UserListPage from "./pages/UserListPage";
+import ProfilePage from "./pages/ProfilePage";
 // import "./index.css";
 
 const queryClient = new QueryClient({
@@ -34,6 +35,7 @@ function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/projects" element={<ProjectListPage />} />
               <Route path="/tasks" element={<TaskListPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route
                 element={<ProtectedRoute requiredPermission="users:manage" />}
               >

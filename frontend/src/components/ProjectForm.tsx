@@ -37,37 +37,37 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel, on
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-xl font-bold mb-4">{initialData ? 'Update Project' : 'Create Project'}</h2>
+      <h2 className="text-xl font-bold mb-4 dark:text-white">{initialData ? 'Update Project' : 'Create Project'}</h2>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Name</label>
-        <input {...register('name')} className="w-full p-2 border border-gray-300 rounded-lg" />
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+        <input {...register('name')} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-purple-500/20" />
         {errors.name && <span className="text-red-500 text-xs">{errors.name.message}</span>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Description</label>
-        <textarea {...register('description')} className="w-full p-2 border border-gray-300 rounded-lg" />
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+        <textarea {...register('description')} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-purple-500/20" rows={3} />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Status</label>
-        <select {...register('status')} className="w-full p-2 border border-gray-300 rounded-lg">
-          <option value="active">Active</option>
-          <option value="on_hold">On Hold</option>
-          <option value="completed">Completed</option>
-          <option value="archived">Archived</option>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+        <select {...register('status')} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-purple-500/20">
+          <option value="active" className="dark:bg-gray-700">Active</option>
+          <option value="on_hold" className="dark:bg-gray-700">On Hold</option>
+          <option value="completed" className="dark:bg-gray-700">Completed</option>
+          <option value="archived" className="dark:bg-gray-700">Archived</option>
         </select>
         {errors.status && <span className="text-red-500 text-xs">{errors.status.message}</span>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Due Date</label>
-        <input type="date" {...register('dueDate')} defaultValue={initialData?.due_date ? initialData.due_date.split('T')[0] : today} className="w-full p-2 border border-gray-300 rounded-lg" />
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Due Date</label>
+        <input type="date" {...register('dueDate')} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-purple-500/20" />
       </div>
       <div className="flex justify-between pt-4">
         {onDelete && (
-          <button type="button" onClick={onDelete} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete</button>
+          <button type="button" onClick={onDelete} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-semibold">Delete</button>
         )}
         <div className="flex gap-2 ml-auto">
-            <button type="button" onClick={onCancel} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Cancel</button>
-            <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">{initialData ? 'Update' : 'Create'}</button>
+            <button type="button" onClick={onCancel} className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">Cancel</button>
+            <button type="submit" className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-semibold shadow-sm">{initialData ? 'Update' : 'Create'}</button>
         </div>
       </div>
     </form>

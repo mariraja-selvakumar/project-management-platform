@@ -64,7 +64,7 @@ describe('Users Endpoints', () => {
       const res = await request(app)
         .post('/api/v1/users/invite')
         .set('Authorization', `Bearer ${makeToken()}`)
-        .send({ email: 'newuser@test.com', firstName: 'Jane', lastName: 'Doe' });
+        .send({ email: 'newuser@test.com', firstName: 'Jane', lastName: 'Doe', roleIds: [3] });
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
@@ -76,7 +76,7 @@ describe('Users Endpoints', () => {
       const res = await request(app)
         .post('/api/v1/users/invite')
         .set('Authorization', `Bearer ${makeToken()}`)
-        .send({ email: 'user@test.com', firstName: 'Jane', lastName: 'Doe' });
+        .send({ email: 'user@test.com', firstName: 'Jane', lastName: 'Doe', roleIds: [3] });
 
       expect(res.status).toBe(400);
     });

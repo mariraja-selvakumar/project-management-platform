@@ -47,10 +47,10 @@ const UserListPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Users</h1>
         {canManageUsers && (
           <button 
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition shadow-sm"
             onClick={() => setActiveUser('invite')}
           >
             <UserPlus size={18} />
@@ -60,17 +60,17 @@ const UserListPage: React.FC = () => {
       </div>
 
       {activeUser && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">
+              <h2 className="text-xl font-bold dark:text-white">
                 {activeUser === 'invite' ? 'Invite User' : 'Edit Roles'}
               </h2>
-              <button onClick={() => setActiveUser(null)}><X size={20} /></button>
+              <button onClick={() => setActiveUser(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><X size={20} /></button>
             </div>
             {activeUser === 'invite' ? (
               <InviteUserForm 
-                onSubmit={(data) => inviteMutation.mutate({ ...data, roleTypeId: data.roleIds[0] })} 
+                onSubmit={(data) => inviteMutation.mutate(data)} 
                 onCancel={() => setActiveUser(null)} 
               />
             ) : (
@@ -85,55 +85,60 @@ const UserListPage: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <table className="min-w-full">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">User</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Last Login</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {users?.map((user) => (
-              <tr key={user.id}>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-semibold text-sm">
-                      {user.firstName?.[0] ?? ''}{user.lastName?.[0] ?? ''}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-900">{user.firstName} {user.lastName}</span>
-                      <span className="text-xs text-gray-500 flex items-center gap-1"><Mail size={12} /> {user.email}</span>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className={`text-xs px-2 py-1 rounded-full font-semibold uppercase ${user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                    {user.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar size={14} />
-                    <span>{user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : 'Never'}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  {canManageUsers && (
-                    <button 
-                      className="text-blue-600 text-sm font-medium hover:underline"
-                      onClick={() => setActiveUser(user)}
-                    >
-                      Edit Roles
-                    </button>
-                  )}
-                </td>
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-900/50">
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Login</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {users?.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center font-bold text-sm border-2 border-white dark:border-gray-800 shadow-sm">
+                        {user.firstName?.[0] ?? ''}{user.lastName?.[0] ?? ''}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-gray-900 dark:text-white">{user.firstName} {user.lastName}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><Mail size={12} /> {user.email}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${
+                        user.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 
+                        'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                    }`}>
+                      {user.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar size={14} />
+                      <span>{user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : 'Never'}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {canManageUsers && (
+                      <button 
+                        className="text-blue-600 dark:text-blue-400 text-sm font-bold hover:underline transition-all"
+                        onClick={() => setActiveUser(user)}
+                      >
+                        Edit Roles
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

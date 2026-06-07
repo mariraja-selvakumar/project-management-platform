@@ -37,7 +37,7 @@ class UsersService {
     const rounds = parseInt(process.env.BCRYPT_ROUNDS, 10) || 12;
     const passwordHash = await bcrypt.hash(data.temporaryPassword || 'ChangeMe123!', rounds);
 
-    const roleIds = data.roleTypeId ? [data.roleTypeId] : [];
+    const roleIds = data.roleIds || [];
 
     const user = await usersRepository.create({
       email: data.email,

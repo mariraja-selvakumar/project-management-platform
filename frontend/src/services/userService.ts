@@ -23,15 +23,32 @@ export const userService = {
   },
   getUser: async (id: number) => {
     const { data } = await apiClient.get(`/users/${id}`);
-    return data.data;
+    const user = data.data;
+    return {
+      ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      isActive: user.is_active,
+      lastLoginAt: user.last_login_at,
+    };
   },
   inviteUser: async (userData: any) => {
     const { data } = await apiClient.post('/users/invite', userData);
-    return data.data;
+    const user = data.data;
+    return {
+      ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
+    };
   },
-  updateUser: async (id: number, userData: any) => {
+  updateProfile: async (id: number, userData: { firstName: string, lastName: string }) => {
     const { data } = await apiClient.put(`/users/${id}`, userData);
-    return data.data;
+    const user = data.data;
+    return {
+      ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
+    };
   },
   updateUserRoles: async (id: number, roleIds: number[]) => {
     const { data } = await apiClient.put(`/users/${id}/roles`, { roleIds });

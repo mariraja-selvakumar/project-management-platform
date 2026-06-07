@@ -27,12 +27,22 @@ const selfUpdateSchema = z.object({
   }).strict(),
 });
 
-const adminUpdateSchema = z.object({
+const updateRolesSchema = z.object({
   params: z.object({ id: z.string().regex(/^\d+$/, 'Invalid user ID') }),
   body: z.object({
-    firstName: z.string().min(1).max(100).optional(),
-    lastName: z.string().min(1).max(100).optional(),
-    email: z.string().email().optional(),
+    roleIds: z.array(z.number().int().positive()).min(1, 'At least one role is required'),
+  }).strict(),
+});
+
+const idParamSchema = z.object({
+  params: z.object({ id: z.string().regex(/^\d+$/, 'Invalid user ID') }),
+});
+
+const listUsersSchema = z.object({
+  query: z.object({
+    isActive: z.enum(['true', 'false']).optional(),
+    page: z.string().regex(/^\d+$/).optional(),
+    limit: z.string().regex(/^\d+$/).optional(),
   }).strict(),
 });
 
