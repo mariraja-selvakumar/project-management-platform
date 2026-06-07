@@ -1,6 +1,6 @@
 # Project Management Platform
 
-A production-ready SaaS Project Management Platform built with Node.js, Express, Knex, MySQL, and React.
+A production-ready SaaS Project Management Platform built with Node.js, Express, Knex, MySQL, and React, now fully containerized using Docker.
 
 ## Features
 
@@ -14,19 +14,16 @@ A production-ready SaaS Project Management Platform built with Node.js, Express,
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js, Knex.js, MySQL
-- **Frontend**: React 18, Vite, Zustand, React Query, Lucide Icons
-- **Documentation**: Postman (collection & environment in `/docs`)
-- **Testing**: Jest, Supertest
+- **Frontend**: React 18, Vite, Zustand, React Query, Lucide Icons, Nginx
+- **Infrastructure**: Docker, Docker Compose
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v18+)
-- MySQL (v8.0+)
-- Docker (optional)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
 
-### Setup
+### Setup & Running
 
 1.  **Clone the repository**:
     ```bash
@@ -34,51 +31,47 @@ A production-ready SaaS Project Management Platform built with Node.js, Express,
     cd project-management-platform
     ```
 
-2.  **Backend Configuration**:
+2.  **Environment Configuration**:
+    Create or update your `.env` file in the project root by copying from the example:
     ```bash
-    cd backend
     cp .env.example .env
-    # Update .env with your database credentials and secrets
-    npm install
-    npx knex migrate:latest
-    npx knex seed:run
     ```
+    *Ensure `DATABASE_URL` is set to `mysql://root:Admin@2026@db:3306/project_management` to work correctly within Docker.*
 
-3.  **Frontend Configuration**:
+3.  **Start the Application**:
+    Simply run the following command to build the images and start all services (Database, Backend, Frontend):
     ```bash
-    cd ../frontend
-    npm install
+    docker-compose up -d --build
     ```
+    *Note: The backend service will automatically run database migrations and seeds upon startup.*
 
-### Running the App
+4.  **Access the Application**:
+    - **Frontend**: Navigate to `http://localhost:5173` in your browser.
+    - **Database**: Access your database on host port `3307` using user `root` and password `Admin@2026`.
 
-- **Backend**: `npm start` (from `/backend`)
-- **Frontend**: `npm run dev` (from `/frontend`)
+### Manual Operations (if needed)
 
-### Running Tests
+- **Running Migrations Manually**:
+  If you need to apply new migrations to a running backend container:
+  ```bash
+  docker exec -it project-management-platform-backend-1 npx knex migrate:latest
+  ```
 
-```bash
-cd backend
-npm test
-```
+- **Stopping the Application**:
+  ```bash
+  docker-compose down
+  ```
 
 ## API Documentation
 
 Postman collection and environment files are located in the `docs/` folder. Import them into Postman to explore the API.
 
-## Environment Variables (Backend)
+## Testing
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | MySQL connection string |
-| `JWT_SECRET` | Secret for access tokens |
-| `JWT_REFRESH_SECRET` | Secret for refresh tokens |
-| `PORT` | Server port (default 3000) |
-| `CORS_ORIGIN` | Allowed frontend origin |
+Backend unit tests can be run locally (ensure you have dependencies installed in `/backend`):
 
-## Security Controls
-
-- **RBAC**: Every endpoint is protected by permission-based middleware.
-- **Audit Logs**: Every write operation is recorded in the `audit_logs` table.
-- **Input Validation**: Joi/Zod schemas validate all request data.
-- **Rate Limiting**: Protects against brute-force and DDoS attempts.
+```bash
+cd backend
+npm install
+npm run test
+```
