@@ -551,7 +551,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"new.user@example.com\",\n    \"firstName\": \"New\",\n    \"lastName\": \"User\",\n    \"temporaryPassword\": \"Password123\"\n}",
+              "raw": "{\n    \"email\": \"new.user@example.com\",\n    \"firstName\": \"New\",\n    \"lastName\": \"User\",\n    \"temporaryPassword\": \"Password123\",\n    \"roleIds\": [3]\n}",
               "options": {
                 "raw": {
                   "language": "json"
