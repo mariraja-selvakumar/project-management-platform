@@ -55,6 +55,7 @@ class UserRepository {
         'tasks:create',
         'tasks:update',
         'tasks:delete',
+        'tasks:read',
         'reports:view',
         'users:manage'
         ],
@@ -62,10 +63,12 @@ class UserRepository {
         'projects:read',
         'projects:update',
         'tasks:create',
-        'tasks:update'
+        'tasks:update',
+        'tasks:read'
       ],
       viewer: [
-        'projects:read'
+        'projects:read',
+        'tasks:read'
       ]
     };
 

@@ -26,6 +26,7 @@ class PermissionRepository {
         'tasks:create',
         'tasks:update',
         'tasks:delete',
+        'tasks:read',
         'reports:view',
         'users:manage'
         ],
@@ -33,10 +34,12 @@ class PermissionRepository {
         'projects:read',
         'projects:update', // Own projects only logic handled at service/controller layer
         'tasks:create',
-        'tasks:update' // Assigned tasks only logic handled at service/controller layer
+        'tasks:update', // Assigned tasks only logic handled at service/controller layer
+        'tasks:read'
       ],
       viewer: [
-        'projects:read'
+        'projects:read',
+        'tasks:read'
       ]
     };
 

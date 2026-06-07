@@ -2,7 +2,8 @@ const db = require('../config/database');
 
 class TaskRepository {
   async findAll({ projectId, status, priority, assigneeId, limit = 20, offset = 0 } = {}) {
-    let query = db('tasks').where({ project_id: projectId });
+    let query = db('tasks');
+    if (projectId) query = query.where({ project_id: projectId });
 
     if (status) query = query.where('status', status);
     if (priority) query = query.where('priority', priority);
@@ -12,7 +13,9 @@ class TaskRepository {
   }
 
   async countAll({ projectId, status, priority, assigneeId } = {}) {
-    let query = db('tasks').where({ project_id: projectId }).count('id as count');
+    let query = db('tasks');
+    if (projectId) query = query.where({ project_id: projectId });
+    query = query.count('id as count');
 
     if (status) query = query.where('status', status);
     if (priority) query = query.where('priority', priority);
@@ -34,7 +37,7 @@ class TaskRepository {
       description: data.description || null,
       status: data.status || 'todo',
       priority: data.priority || 'medium',
-      due_date: data.dueDate || null,
+      due_date: data.due_date || null,
       created_at: db.fn.now(),
       updated_at: db.fn.now(),
     });
@@ -48,7 +51,7 @@ class TaskRepository {
     if (data.status !== undefined) updatePayload.status = data.status;
     if (data.priority !== undefined) updatePayload.priority = data.priority;
     if (data.assigneeId !== undefined) updatePayload.assignee_id = data.assigneeId;
-    if (data.dueDate !== undefined) updatePayload.due_date = data.dueDate;
+    if (data.due_date !== undefined) updatePayload.due_date = data.due_date;
 
     updatePayload.updated_at = db.fn.now();
 

@@ -28,6 +28,7 @@ exports.seed = async function(knex) {
     { id: 5, name: 'tasks:create', resource: 'tasks', action: 'create' },
     { id: 6, name: 'tasks:update', resource: 'tasks', action: 'update' },
     { id: 7, name: 'tasks:delete', resource: 'tasks', action: 'delete' },
+    { id: 10, name: 'tasks:read', resource: 'tasks', action: 'read' },
     { id: 8, name: 'users:manage', resource: 'users', action: 'manage' },
     { id: 9, name: 'reports:view', resource: 'reports', action: 'view' }
   ];

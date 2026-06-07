@@ -17,7 +17,7 @@ const createTaskSchema = z.object({
     status: z.enum(['todo', 'in_progress', 'in_review', 'done', 'cancelled']).optional(),
     priority: z.enum(['low', 'medium', 'high', 'critical']).optional(),
     assigneeId: z.number().int().positive().optional().nullable(),
-    dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
+    due_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
   }).strict(),
 });
 
@@ -46,7 +46,7 @@ const updateTaskSchema = z.object({
     status: z.enum(['todo', 'in_progress', 'in_review', 'done', 'cancelled']).optional(),
     priority: z.enum(['low', 'medium', 'high', 'critical']).optional(),
     assigneeId: z.number().int().positive().optional().nullable(),
-    dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
+    due_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
   }).strict(),
 });
 
@@ -61,6 +61,7 @@ const idParamSchema = z.object({
   params: z.object({ id: z.string().regex(/^\d+$/, 'Invalid task ID') }),
 });
 
+taskRouter.get('/', generalLimiter, auth, requirePermission('tasks', 'read'), taskController.listAll);
 taskRouter.get('/:id', generalLimiter, auth, requirePermission('tasks', 'read'), validate(idParamSchema), taskController.get);
 taskRouter.put('/:id', generalLimiter, auth, requirePermission('tasks', 'update'), validate(updateTaskSchema), taskController.update);
 taskRouter.patch('/:id/status', generalLimiter, auth, requirePermission('tasks', 'update'), validate(patchStatusSchema), taskController.patchStatus);

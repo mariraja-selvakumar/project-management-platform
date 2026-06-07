@@ -35,7 +35,7 @@ function App() {
               <Route path="/projects" element={<ProjectListPage />} />
               <Route path="/tasks" element={<TaskListPage />} />
               <Route
-                element={<ProtectedRoute requiredPermission="users:read" />}
+                element={<ProtectedRoute requiredPermission="users:manage" />}
               >
                 <Route path="/users" element={<UserListPage />} />
               </Route>

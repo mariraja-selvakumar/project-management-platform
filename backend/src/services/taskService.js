@@ -5,6 +5,31 @@ const auditLogService = require('./auditLogService');
 const { notFound, forbidden } = require('../utils/errors');
 
 class TaskService {
+  async listAllTasks(filters, userContext) {
+    const page = parseInt(filters.page, 10) || 1;
+    const limit = parseInt(filters.limit, 10) || 20;
+    const offset = (page - 1) * limit;
+
+    const tasks = await taskRepository.findAll({
+      status: filters.status,
+      priority: filters.priority,
+      assigneeId: filters.assigneeId,
+      limit,
+      offset,
+    });
+
+    const total = await taskRepository.countAll({
+      status: filters.status,
+      priority: filters.priority,
+      assigneeId: filters.assigneeId,
+    });
+
+    return {
+      tasks,
+      meta: { total, page, limit },
+    };
+  }
+
   async listTasks(projectId, filters, userContext) {
     // Validate project exists
     const project = await projectRepository.findById(projectId);

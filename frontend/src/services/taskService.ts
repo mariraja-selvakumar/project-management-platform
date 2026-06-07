@@ -2,7 +2,7 @@ import apiClient from './apiClient';
 
 export interface Task {
   id: number;
-  projectId: number;
+  project_id: number;
   assigneeId: number | null;
   title: string;
   description: string;
@@ -16,16 +16,16 @@ export interface Task {
 }
 
 export const taskService = {
-  getProjectTasks: async (projectId: number, filters: any) => {
-    const { data } = await apiClient.get(`/projects/${projectId}/tasks`, { params: filters });
+  getProjectTasks: async (project_id: number, filters: any) => {
+    const { data } = await apiClient.get(`/projects/${project_id}/tasks`, { params: filters });
     return data.data;
   },
   getTask: async (id: number) => {
     const { data } = await apiClient.get(`/tasks/${id}`);
     return data.data;
   },
-  createTask: async (projectId: number, taskData: Partial<Task>) => {
-    const { data } = await apiClient.post(`/projects/${projectId}/tasks`, taskData);
+  createTask: async (project_id: number, taskData: Partial<Task>) => {
+    const { data } = await apiClient.post(`/projects/${project_id}/tasks`, taskData);
     return data.data;
   },
   updateTask: async (id: number, taskData: Partial<Task>) => {

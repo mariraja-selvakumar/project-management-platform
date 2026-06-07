@@ -1,6 +1,17 @@
 const taskService = require('../services/taskService');
 
 class TaskController {
+  async listAll(req, res, next) {
+    try {
+      const { status, priority, assigneeId, page, limit } = req.query;
+      const userContext = { userId: req.user.userId };
+      const { tasks, meta } = await taskService.listAllTasks({ status, priority, assigneeId, page, limit }, userContext);
+      res.status(200).json({ success: true, data: tasks, meta });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async list(req, res, next) {
     try {
       const { id: projectId } = req.params;
