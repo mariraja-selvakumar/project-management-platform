@@ -3,8 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectService, type Project } from '../services/projectService';
 import { Plus, Search, Filter, MoreVertical, Clock } from 'lucide-react';
 import { ProjectForm } from '../components/ProjectForm';
+import { useAuthStore } from '../store/useAuthStore';
 
 const ProjectListPage: React.FC = () => {
+  const { user } = useAuthStore();
+  const canCreateProject = user?.permissions?.includes('projects:create');
+  const canUpdateProject = user?.permissions?.includes('projects:update');
+  const canDeleteProject = user?.permissions?.includes('projects:delete');
+
   const [filters, setFilters] = useState({ status: 'active', page: 1, limit: 10 });
   const [activeProject, setActiveProject] = useState<Project | 'create' | null>(null);
   const queryClient = useQueryClient();
@@ -51,10 +57,12 @@ const ProjectListPage: React.FC = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Projects</h1>
-        <button className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm" onClick={() => setActiveProject('create')}>
-          <Plus size={18} />
-          <span>New Project</span>
-        </button>
+        {canCreateProject && (
+          <button className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm" onClick={() => setActiveProject('create')}>
+            <Plus size={18} />
+            <span>New Project</span>
+          </button>
+        )}
       </div>
 
       {activeProject && (
@@ -70,7 +78,7 @@ const ProjectListPage: React.FC = () => {
                 }
               }}
               onCancel={() => setActiveProject(null)}
-              onDelete={activeProject !== 'create' ? () => deleteMutation.mutate(activeProject.id) : undefined}
+              onDelete={activeProject !== 'create' && canDeleteProject ? () => deleteMutation.mutate(activeProject.id) : undefined}
             />
           </div>
         </div>
@@ -99,9 +107,11 @@ const ProjectListPage: React.FC = () => {
       {projects.length === 0 ? (
         <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
           <p className="text-gray-500 dark:text-gray-400 mb-4">No projects found.</p>
-          <button className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm" onClick={() => setActiveProject('create')}>
-            Create your first project
-          </button>
+          {canCreateProject && (
+            <button className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors shadow-sm" onClick={() => setActiveProject('create')}>
+              Create your first project
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -114,12 +124,14 @@ const ProjectListPage: React.FC = () => {
                 }`}>
                   {project.status.replace('_', ' ')}
                 </span>
-                <button 
-                  className="text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-                  onClick={() => setActiveProject(project)}
-                >
-                  <MoreVertical size={18} />
-                </button>
+                {(canUpdateProject || canDeleteProject) && (
+                  <button 
+                    className="text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    onClick={() => setActiveProject(project)}
+                  >
+                    <MoreVertical size={18} />
+                  </button>
+                )}
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">{project.name}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 h-10">{project.description}</p>

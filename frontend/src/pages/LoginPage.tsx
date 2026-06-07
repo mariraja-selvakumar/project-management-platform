@@ -25,7 +25,20 @@ const LoginPage: React.FC = () => {
       const data = await authService.login({ email, password });
       const { user, accessToken, refreshToken } = data;
       setAuth(user, accessToken, refreshToken);
-      navigate(from, { replace: true });
+
+      // Determine initial redirect
+      let target = from;
+      if (from === '/dashboard' || from === '/') {
+        const perms = user.permissions || [];
+        if (!perms.includes('reports:view')) {
+          if (perms.includes('projects:read')) target = '/projects';
+          else if (perms.includes('tasks:read')) target = '/tasks';
+          else if (perms.includes('users:manage')) target = '/users';
+          else target = '/profile';
+        }
+      }
+
+      navigate(target, { replace: true });
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
     } finally {

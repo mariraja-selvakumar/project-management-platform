@@ -100,6 +100,16 @@ const ProfilePage: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
                 <input {...profileForm.register('lastName')} disabled={!isEditMode} className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:bg-gray-50 dark:disabled:bg-gray-900" placeholder="Last Name" />
               </div>
+              <div className="pt-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assigned Roles</label>
+                <div className="flex flex-wrap gap-2">
+                  {user?.roles?.map((role) => (
+                    <span key={role} className="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 text-xs font-bold rounded-full uppercase tracking-wider">
+                      {role}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
             {isEditMode && <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors shadow-sm">Save Changes</button>}
         </form>

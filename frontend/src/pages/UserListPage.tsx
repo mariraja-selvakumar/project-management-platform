@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../store/useAuthStore';
 import { userService, type User } from '../services/userService';
-import { UserPlus, Mail, Calendar, X } from 'lucide-react';
+import { UserPlus, Calendar, X } from 'lucide-react';
 import { InviteUserForm } from '../components/InviteUserForm';
 import { EditRolesForm } from '../components/EditRolesForm';
 
@@ -75,7 +75,13 @@ const UserListPage: React.FC = () => {
               />
             ) : (
               <EditRolesForm 
-                initialRoleIds={[]}
+                initialRoleIds={(activeUser as User).roles?.map(r => {
+                    if (r === 'admin') return 1;
+                    if (r === 'manager') return 2;
+                    if (r === 'member') return 3;
+                    if (r === 'viewer') return 4;
+                    return 0;
+                }).filter(id => id > 0) || []}
                 onSubmit={(data) => updateRolesMutation.mutate({ id: (activeUser as User).id, ...data })} 
                 onDeactivate={() => deactivateMutation.mutate((activeUser as User).id)}
                 onCancel={() => setActiveUser(null)} 
@@ -91,6 +97,8 @@ const UserListPage: React.FC = () => {
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-900/50">
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Roles</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Login</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
@@ -104,10 +112,19 @@ const UserListPage: React.FC = () => {
                       <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center font-bold text-sm border-2 border-white dark:border-gray-800 shadow-sm">
                         {user.firstName?.[0] ?? ''}{user.lastName?.[0] ?? ''}
                       </div>
-                      <div className="flex flex-col">
-                        <span className="font-semibold text-gray-900 dark:text-white">{user.firstName} {user.lastName}</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"><Mail size={12} /> {user.email}</span>
-                      </div>
+                      <span className="font-semibold text-gray-900 dark:text-white">{user.firstName} {user.lastName}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    {user.email}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex flex-wrap gap-1">
+                      {user.roles?.map(role => (
+                        <span key={role} className="text-[10px] px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded font-bold uppercase">
+                          {role}
+                        </span>
+                      ))}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

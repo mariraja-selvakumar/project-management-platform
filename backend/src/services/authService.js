@@ -50,12 +50,14 @@ class AuthService {
     });
 
     const permissions = await userRepository.getPermissions(user.id);
+    const roles = await usersRepository.getUserRoles(user.id);
     return {
       accessToken,
       refreshToken,
       user: {
         ...this._sanitize(user),
         permissions,
+        roles: roles.map(r => r.name),
       },
     };
   }
@@ -130,10 +132,12 @@ class AuthService {
     }
 
     const permissions = await userRepository.getPermissions(userId);
+    const roles = await usersRepository.getUserRoles(userId);
 
     return {
       ...this._sanitize(user),
       permissions,
+      roles: roles.map(r => r.name),
     };
   }
 

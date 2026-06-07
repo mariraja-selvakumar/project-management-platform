@@ -3,9 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../services/apiClient';
 import { projectService } from '../services/projectService';
 import { taskService } from '../services/taskService';
-import { userService } from '../services/userService';
+import { userService, type User } from '../services/userService';
 import { Calendar, Plus, Edit2 } from 'lucide-react';
 import { TaskForm } from '../components/TaskForm';
+import { useAuthStore } from '../store/useAuthStore';
 
 interface Task {
   id: number;
@@ -33,6 +34,11 @@ const mapTask = (task: any): Task => ({
 const COLUMNS: Task['status'][] = ['todo', 'in_progress', 'in_review', 'done', 'cancelled'];
 
 const TaskListPage: React.FC = () => {
+  const { user: currentUser } = useAuthStore();
+  const canCreateTask = currentUser?.permissions?.includes('tasks:create');
+  const canUpdateTask = currentUser?.permissions?.includes('tasks:update');
+  const canDeleteTask = currentUser?.permissions?.includes('tasks:delete');
+
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const queryClient = useQueryClient();
@@ -99,13 +105,15 @@ const TaskListPage: React.FC = () => {
     <div className="flex flex-col gap-6 p-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Tasks</h1>
-        <button 
-            onClick={() => { setEditingTask(null); setIsTaskModalOpen(true); }}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition shadow-sm"
-        >
-            <Plus size={18} />
-            <span>Add Task</span>
-        </button>
+        {canCreateTask && (
+          <button 
+              onClick={() => { setEditingTask(null); setIsTaskModalOpen(true); }}
+              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition shadow-sm"
+          >
+              <Plus size={18} />
+              <span>Add Task</span>
+          </button>
+        )}
       </div>
 
       {isTaskModalOpen && (
@@ -126,7 +134,7 @@ const TaskListPage: React.FC = () => {
                 onCancel={() => { setIsTaskModalOpen(false); setEditingTask(null); }}
                 submitLabel={editingTask ? 'Update Task' : 'Create Task'}
             />
-            {editingTask && (
+            {editingTask && canDeleteTask && (
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <button 
                         onClick={() => deleteMutation.mutate(editingTask.id)}
@@ -151,11 +159,26 @@ const TaskListPage: React.FC = () => {
                 <div key={task.id} className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer group">
                     <div className="flex justify-between items-start mb-2">
                         <h3 className="font-medium text-sm text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{task.title}</h3>
-                        <button onClick={(e) => { e.stopPropagation(); setEditingTask(task); setIsTaskModalOpen(true); }} className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
-                          <Edit2 size={14} />
-                        </button>
+                        {canUpdateTask && (
+                          <button onClick={(e) => { e.stopPropagation(); setEditingTask(task); setIsTaskModalOpen(true); }} className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                            <Edit2 size={14} />
+                          </button>
+                        )}
                     </div>
                   <p className="text-[10px] text-gray-400 dark:text-gray-500 font-mono mb-3">#PRJ-{task.project_id}</p>
+                  
+                  {task.assigneeId && (
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-5 h-5 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-[8px] font-bold">
+                        {users.find((u: User) => u.id === task.assigneeId)?.firstName?.[0] || 'U'}
+                        {users.find((u: User) => u.id === task.assigneeId)?.lastName?.[0] || ''}
+                      </div>
+                      <span className="text-[10px] text-gray-600 dark:text-gray-400 font-medium">
+                        {users.find((u: User) => u.id === task.assigneeId)?.firstName} {users.find((u: User) => u.id === task.assigneeId)?.lastName}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between items-center text-[10px]">
                     <span className={`px-2 py-0.5 rounded-full font-bold uppercase ${
                         task.priority === 'critical' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' : 

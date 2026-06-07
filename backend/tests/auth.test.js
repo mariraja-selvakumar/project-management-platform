@@ -1,11 +1,13 @@
 const request = require('supertest');
 const app = require('../src/app');
 const userRepository = require('../src/repositories/userRepository');
+const usersRepository = require('../src/repositories/usersRepository');
 const { generateAccessToken, generateRefreshToken } = require('../src/utils/jwt');
 const bcrypt = require('bcryptjs');
 
 // Mock dependencies
 jest.mock('../src/repositories/userRepository');
+jest.mock('../src/repositories/usersRepository');
 jest.mock('../src/config/database', () => {
   // Mock knex instance for middlewares and repositories
   const mockKnex = jest.fn(() => ({
@@ -30,6 +32,7 @@ jest.mock('../src/config/database', () => {
 describe('Auth Endpoints', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    usersRepository.getUserRoles.mockResolvedValue([]);
   });
 
   describe('POST /api/v1/auth/login', () => {

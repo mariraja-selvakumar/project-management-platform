@@ -8,6 +8,7 @@ export interface User {
   isActive: boolean;
   lastLoginAt: string | null;
   permissions?: string[];
+  roles?: string[];
 }
 
 export const userService = {
@@ -15,10 +16,12 @@ export const userService = {
     const { data } = await apiClient.get('/users', { params: filters });
     return data.data.map((user: any) => ({
       ...user,
+      id: Number(user.id),
       firstName: user.first_name,
       lastName: user.last_name,
       isActive: user.is_active,
       lastLoginAt: user.last_login_at,
+      roles: user.roles || [],
     }));
   },
   getUser: async (id: number) => {
@@ -26,10 +29,12 @@ export const userService = {
     const user = data.data;
     return {
       ...user,
+      id: Number(user.id),
       firstName: user.first_name,
       lastName: user.last_name,
       isActive: user.is_active,
       lastLoginAt: user.last_login_at,
+      roles: user.roles || [],
     };
   },
   inviteUser: async (userData: any) => {

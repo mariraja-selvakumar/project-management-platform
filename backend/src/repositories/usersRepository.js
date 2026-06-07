@@ -4,8 +4,25 @@ class UsersRepository {
   async findAll({ isActive, limit = 20, offset = 0 } = {}) {
     let query = db('users');
     if (isActive !== undefined) query = query.where('is_active', isActive);
-    return query.limit(limit).offset(offset).orderBy('created_at', 'desc')
+    const users = await query.limit(limit).offset(offset).orderBy('created_at', 'desc')
       .select('id', 'email', 'first_name', 'last_name', 'is_active', 'last_login_at', 'created_at', 'updated_at');
+    
+    // Fetch roles for each user
+    const userIds = users.map(u => u.id);
+    if (userIds.length === 0) return [];
+
+    const allRoles = await db('user_roles')
+      .join('roles', 'user_roles.role_id', 'roles.id')
+      .whereIn('user_roles.user_id', userIds)
+      .select('user_roles.user_id', 'roles.name');
+
+    const rolesMap = allRoles.reduce((acc, r) => {
+      if (!acc[r.user_id]) acc[r.user_id] = [];
+      acc[r.user_id].push(r.name);
+      return acc;
+    }, {});
+
+    return users.map(u => ({ ...u, roles: rolesMap[u.id] || [] }));
   }
 
   async countAll({ isActive } = {}) {

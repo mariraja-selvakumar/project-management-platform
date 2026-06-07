@@ -18,10 +18,25 @@ interface EditRolesFormProps {
 }
 
 export const EditRolesForm: React.FC<EditRolesFormProps> = ({ onSubmit, onCancel, onDeactivate, initialRoleIds }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<RolesFormData>({
+  const { handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<RolesFormData>({
     resolver: zodResolver(rolesSchema) as unknown as Resolver<RolesFormData>,
     defaultValues: { roleIds: initialRoleIds },
   });
+
+  const selectedRoleIds = watch('roleIds');
+
+  React.useEffect(() => {
+    reset({ roleIds: initialRoleIds });
+  }, [initialRoleIds, reset]);
+
+  const toggleRole = (roleId: number) => {
+    const currentRoles = selectedRoleIds || [];
+    if (currentRoles.includes(roleId)) {
+      setValue('roleIds', currentRoles.filter(id => id !== roleId));
+    } else {
+      setValue('roleIds', [...currentRoles, roleId]);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit((data) => onSubmit(data as unknown as RolesFormData))} className="space-y-4">
@@ -32,8 +47,8 @@ export const EditRolesForm: React.FC<EditRolesFormProps> = ({ onSubmit, onCancel
                 <label key={role.id} className="flex items-center gap-2 cursor-pointer group">
                     <input 
                         type="checkbox" 
-                        value={role.id} 
-                        {...register('roleIds')} 
+                        checked={selectedRoleIds.includes(role.id)}
+                        onChange={() => toggleRole(role.id)}
                         className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{role.name}</span>

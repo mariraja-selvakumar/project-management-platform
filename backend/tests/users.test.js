@@ -24,7 +24,7 @@ const makeToken = (userId = 1) => generateAccessToken({ userId, email: 'admin@te
 
 const mockUser = {
   id: 2, email: 'user@test.com', first_name: 'John', last_name: 'Doe',
-  is_active: 1, last_login_at: null,
+  is_active: 1, last_login_at: null, roles: ['member'],
   created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
 };
 
