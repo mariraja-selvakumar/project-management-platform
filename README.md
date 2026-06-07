@@ -1,6 +1,6 @@
 # Project Management Platform
 
-A production-ready SaaS Project Management Platform built with Node.js, Express, Knex, MySQL, and React, now fully containerized using Docker.
+A production-ready SaaS Project Management Platform built with Node.js, Express, Knex, MySQL, and React.
 
 ## Features
 
@@ -14,16 +14,19 @@ A production-ready SaaS Project Management Platform built with Node.js, Express,
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js, Knex.js, MySQL
-- **Frontend**: React 18, Vite, Zustand, React Query, Lucide Icons, Nginx
-- **Infrastructure**: Docker, Docker Compose
+- **Frontend**: React 18, Vite, Zustand, React Query, Lucide Icons
+- **Documentation**: Postman (collection & environment in `/docs`)
+- **Testing**: Jest, Supertest
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
+- Node.js (v18+)
+- MySQL (v8.0+)
+- Docker (optional)
 
-### Setup & Running
+### Setup
 
 1.  **Clone the repository**:
     ```bash
@@ -31,47 +34,67 @@ A production-ready SaaS Project Management Platform built with Node.js, Express,
     cd project-management-platform
     ```
 
-2.  **Environment Configuration**:
-    Create or update your `.env` file in the project root by copying from the example:
+2.  **Backend Configuration**:
     ```bash
+    cd backend
     cp .env.example .env
+    # Update .env with your database credentials and secrets
+    npm install
+    npx knex migrate:latest
+    npx knex seed:run
     ```
-    *Ensure `DATABASE_URL` is set to `mysql://root:Admin@2026@db:3306/project_management` to work correctly within Docker.*
 
-3.  **Start the Application**:
-    Simply run the following command to build the images and start all services (Database, Backend, Frontend):
+3.  **Frontend Configuration**:
+    ```bash
+    cd ../frontend
+    npm install
+    ```
+
+### Running the App
+
+- **Backend**: `npm start` (from `/backend`)
+- **Frontend**: `npm run dev` (from `/frontend`)
+
+### Running Tests
+
+```bash
+cd backend
+npm test
+```
+
+## Docker Setup (Alternative Method)
+
+You can run the entire project using Docker Compose, which automates environment setup.
+
+1.  **Prerequisites**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
+2.  **Environment Setup**:
+    Ensure your `.env` file has `DATABASE_URL` set to `mysql://root:Admin@2026@db:3306/project_management`.
+3.  **Start Application**:
     ```bash
     docker-compose up -d --build
     ```
-    *Note: The backend service will automatically run database migrations and seeds upon startup.*
-
-4.  **Access the Application**:
-    - **Frontend**: Navigate to `http://localhost:5173` in your browser.
-    - **Database**: Access your database on host port `3307` using user `root` and password `Admin@2026`.
-
-### Manual Operations (if needed)
-
-- **Running Migrations Manually**:
-  If you need to apply new migrations to a running backend container:
-  ```bash
-  docker exec -it project-management-platform-backend-1 npx knex migrate:latest
-  ```
-
-- **Stopping the Application**:
-  ```bash
-  docker-compose down
-  ```
+    *Database migrations and seeding run automatically on startup.*
+4.  **Access**:
+    - Frontend: `http://localhost:5173`
+    - DB: `127.0.0.1:3307`
 
 ## API Documentation
 
 Postman collection and environment files are located in the `docs/` folder. Import them into Postman to explore the API.
 
-## Testing
+## Environment Variables (Backend)
 
-Backend unit tests can be run locally (ensure you have dependencies installed in `/backend`):
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | MySQL connection string |
+| `JWT_SECRET` | Secret for access tokens |
+| `JWT_REFRESH_SECRET` | Secret for refresh tokens |
+| `PORT` | Server port (default 3000) |
+| `CORS_ORIGIN` | Allowed frontend origin |
 
-```bash
-cd backend
-npm install
-npm run test
-```
+## Security Controls
+
+- **RBAC**: Every endpoint is protected by permission-based middleware.
+- **Audit Logs**: Every write operation is recorded in the `audit_logs` table.
+- **Input Validation**: Joi/Zod schemas validate all request data.
+- **Rate Limiting**: Protects against brute-force and DDoS attempts.
