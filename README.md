@@ -1,100 +1,72 @@
 # Project Management Platform
 
-A production-ready SaaS Project Management Platform built with Node.js, Express, Knex, MySQL, and React.
+## About This Project
+A production-ready SaaS Project Management Platform designed to streamline team collaboration, project tracking, and task management. It features robust role-based access control, secure authentication, and real-time dashboard analytics.
 
-## Features
-
-- **Authentication**: Secure JWT-based login/logout with refresh token rotation.
-- **Dashboard**: Real-time KPIs, task distribution charts, and activity feed.
-- **Project Management**: CRUD operations for projects with status tracking.
-- **Task Management**: Granular task tracking within projects.
-- **User Management**: RBAC (Role-Based Access Control) for Admins, Managers, Members, and Viewers.
-- **Security**: Rate limiting, Helmet.js headers, input validation, and audit logging.
-
-## Tech Stack
-
+## Specifications
 - **Backend**: Node.js, Express.js, Knex.js, MySQL
-- **Frontend**: React 18, Vite, Zustand, React Query, Lucide Icons
-- **Documentation**: Postman (collection & environment in `/docs`)
-- **Testing**: Jest, Supertest
+- **Frontend**: React 18, Vite, Zustand, React Query, Lucide Icons, Nginx
+- **Security**: JWT Authentication, RBAC, Rate Limiting, Helmet.js, Zod Validation
+- **Infrastructure**: Docker & Docker Compose
 
 ## Getting Started
 
-### Prerequisites
+### 1. Clone the repository
+```bash
+git clone https://github.com/mariraja-selvakumar/project-management-platform.git
+cd project-management-platform
+```
 
-- Node.js (v18+)
-- MySQL (v8.0+)
-- Docker (optional)
+---
 
-### Setup
+### Option A: Running with Docker (Recommended)
 
-1.  **Clone the repository**:
+**Prerequisites**: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+1.  **Configure**:
     ```bash
-    git clone https://github.com/mariraja-selvakumar/project-management-platform.git
-    cd project-management-platform
-    ```
-
-2.  **Backend Configuration**:
-    ```bash
-    cd backend
     cp .env.example .env
-    # Update .env with your database credentials and secrets
-    npm install
+    ```
+    Ensure `DATABASE_URL` is set to `mysql://root:Admin@2026@db:3306/project_management`.
+2.  **Build & Run**:
+    ```bash
+    docker-compose up -d --build
+    ```
+    *Database migrations and seeding run automatically.*
+3.  **Access**:
+    - Frontend: `http://localhost:5173`
+    - DB: `127.0.0.1:3307`
+
+---
+
+### Option B: Running Locally (Development)
+
+**Prerequisites**: Node.js (v18+), MySQL (v8.0+)
+
+1.  **Environment Setup**:
+    Configure your `.env` file with your local MySQL credentials.
+2.  **Build & Setup**:
+    ```bash
+    # Backend
+    cd backend && npm install
     npx knex migrate:latest
     npx knex seed:run
+    
+    # Frontend
+    cd ../frontend && npm install
     ```
+3.  **Run**:
+    - Backend: `npm start` (from `/backend`)
+    - Frontend: `npm run dev` (from `/frontend`)
 
-3.  **Frontend Configuration**:
-    ```bash
-    cd ../frontend
-    npm install
-    ```
+---
 
-### Running the App
-
-- **Backend**: `npm start` (from `/backend`)
-- **Frontend**: `npm run dev` (from `/frontend`)
-
-### Running Tests
-
+## Testing
 ```bash
 cd backend
 npm test
 ```
 
-## Docker Setup (Alternative Method)
-
-You can run the entire project using Docker Compose, which automates environment setup.
-
-1.  **Prerequisites**: [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
-2.  **Environment Setup**:
-    Ensure your `.env` file has `DATABASE_URL` set to `mysql://root:Admin@2026@db:3306/project_management`.
-3.  **Start Application**:
-    ```bash
-    docker-compose up -d --build
-    ```
-    *Database migrations and seeding run automatically on startup.*
-4.  **Access**:
-    - Frontend: `http://localhost:5173`
-    - DB: `127.0.0.1:3307`
-
-## API Documentation
-
-Postman collection and environment files are located in the `docs/` folder. Import them into Postman to explore the API.
-
-## Environment Variables (Backend)
-
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | MySQL connection string |
-| `JWT_SECRET` | Secret for access tokens |
-| `JWT_REFRESH_SECRET` | Secret for refresh tokens |
-| `PORT` | Server port (default 3000) |
-| `CORS_ORIGIN` | Allowed frontend origin |
-
-## Security Controls
-
-- **RBAC**: Every endpoint is protected by permission-based middleware.
-- **Audit Logs**: Every write operation is recorded in the `audit_logs` table.
-- **Input Validation**: Joi/Zod schemas validate all request data.
-- **Rate Limiting**: Protects against brute-force and DDoS attempts.
+## Features & Documentation
+- **API Documentation**: Located in `docs/` folder (Postman).
+- **Security**: Includes Audit Logs, RBAC, Input Validation, and Rate Limiting.
