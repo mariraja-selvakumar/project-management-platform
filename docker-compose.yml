@@ -3,20 +3,34 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: platform
+      MYSQL_ROOT_PASSWORD: Admin@2026
+      MYSQL_DATABASE: project_management
     volumes:
       - db_data:/var/lib/mysql
-    ports: ['3306:3306']
+    ports: ['3307:3306']
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pAdmin@2026"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
   backend:
     build: ./backend
     env_file: .env
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=Admin@2026
+      - DB_NAME=project_management
+      - NODE_ENV=production
     ports: ['3000:3000']
-    depends_on: [db]
+    depends_on:
+      db:
+        condition: service_healthy
+    command: /bin/sh -c "npx knex migrate:latest && npx knex seed:run && npm start"
   frontend:
     build: ./frontend
-    ports: ['5173:5173']
+    ports: ['5173:80']
     environment:
-      VITE_API_BASE_URL: http://backend:3000/api/v1
+      VITE_API_BASE_URL: http://localhost:3000/api/v1
 volumes:
   db_data:
