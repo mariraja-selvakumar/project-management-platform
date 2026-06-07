@@ -17,7 +17,7 @@ const Layout: React.FC = () => {
     { to: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} />, permission: 'reports:view' },
     { to: '/projects', label: 'Projects', icon: <Briefcase size={20} />, permission: 'projects:read' },
     { to: '/tasks', label: 'Tasks', icon: <CheckSquare size={20} />, permission: 'tasks:read' },
-    { to: '/users', label: 'Users', icon: <Users size={20} />, permission: 'users:read' },
+    { to: '/users', label: 'Users', icon: <Users size={20} />, permission: 'users:manage' },
   ];
 
   const filteredNavItems = navItems.filter(

@@ -13,7 +13,13 @@ export interface User {
 export const userService = {
   getUsers: async (filters: any) => {
     const { data } = await apiClient.get('/users', { params: filters });
-    return data.data;
+    return data.data.map((user: any) => ({
+      ...user,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      isActive: user.is_active,
+      lastLoginAt: user.last_login_at,
+    }));
   },
   getUser: async (id: number) => {
     const { data } = await apiClient.get(`/users/${id}`);

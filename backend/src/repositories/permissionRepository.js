@@ -26,8 +26,9 @@ class PermissionRepository {
         'tasks:create',
         'tasks:update',
         'tasks:delete',
-        'reports:view'
-      ],
+        'reports:view',
+        'users:manage'
+        ],
       member: [
         'projects:read',
         'projects:update', // Own projects only logic handled at service/controller layer

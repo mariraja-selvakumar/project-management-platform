@@ -12,7 +12,7 @@ const ProjectListPage: React.FC = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['projects', filters],
     queryFn: () => {
-      const activeFilters = { ...filters };
+      const activeFilters = { ...filters } as { status?: string, page: number, limit: number };
       if (!activeFilters.status) delete activeFilters.status;
       return projectService.getProjects(activeFilters);
     },

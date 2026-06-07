@@ -55,9 +55,10 @@ class UserRepository {
         'tasks:create',
         'tasks:update',
         'tasks:delete',
-        'reports:view'
-      ],
-      member: [
+        'reports:view',
+        'users:manage'
+        ],
+        member: [
         'projects:read',
         'projects:update',
         'tasks:create',
