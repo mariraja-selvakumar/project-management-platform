@@ -33,9 +33,12 @@ cd project-management-platform
     docker-compose up -d --build
     ```
     *Database migrations and seeding run automatically.*
-3.  **Access**:
+### Access
     - Frontend: `http://localhost:5173`
     - DB: `127.0.0.1:3307`
+    - **Default Admin Credentials**:
+      - Email: `admin@platform.com`
+      - Password: `AdminPassword123!`
 
 ---
 
